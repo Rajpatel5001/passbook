@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load rest_framework %}
+{% load humanize %}
+{% load add_classes %}
+{% block body_block %}
+<div class="container">
+  <h1>TOTAL ENTRY:{{count}}</h1>
+  <h1>TOTAL BALANCE: {{total.total}}</h1>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">DATE</th>
+        <th scope="col">PARTICULARS</th>
+        <th scope="col">DEBIT</th>
+        <th scope="col">CREDIT</th>
+        <th scope="col">BALANCE</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in results.entrys %}
+      <tr>
+        <td>{{entry.entry_created_date}}</td>
+        <td>{{entry.particular}}</td>
+        <td>{{entry.debit | currency }}</td>
+        <td>{{entry.credit | currency }}</td>
+        {% if entry.balance.0 == '-' %}
+        <td class="table-danger">{{ entry.balance | add_class | currency }}</td>
+        {% else %}
+        <td class="table-success">{{entry.balance | add_class | currency }}</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="d-flex justify-content-around">
+  {% if previous != null %}
+  <span class="h2"><a href="{{previous}}">PREVIOUS</a> </span>
+  {% endif %}
+  {% if next != null %}
+  <span class="h2"><a href="{{next}}">NEXT</a> </span>
+</div>
+{% endif %}
+{% endblock %}
